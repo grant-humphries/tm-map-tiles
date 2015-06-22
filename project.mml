@@ -1,0 +1,137 @@
+{
+  "bounds": [
+    -123.8407,
+    44.6618,
+    -121.4539,
+    45.803
+  ],
+  "center": [
+    -122.6844,
+    45.5092,
+    9
+  ],
+  "format": "png",
+  "interactivity": false,
+  "minzoom": 9,
+  "maxzoom": 19,
+  "srs": "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0.0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs +over",
+  "Stylesheet": [
+    "base.mss",
+    "streets.mss",
+    "transit.mss",
+    "palette.mss"
+  ],
+  "Layer": [
+    {
+      "extent": [
+        -124.01635851566606,
+        44.5130396804514,
+        -121.29745306754403,
+        45.85226808342845
+      ],
+      "Datasource": {
+        "type": "postgis",
+        "table": "osmcarto._polygon",
+        "key_field": "",
+        "geometry_field": "",
+        "extent_cache": "auto",
+        "extent": "-13805437.88,5545182.58,-13502770.71,5756706.6",
+        "host": "maps7.trimet.org",
+        "dbname": "trimet",
+        "user": "geoserve"
+      },
+      "id": "osmcarto_polygon",
+      "class": "",
+      "srs-name": "900913",
+      "srs": "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0.0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs +over",
+      "advanced": {},
+      "name": "osmcarto_polygon"
+    },
+    {
+      "geometry": "linestring",
+      "extent": [
+        -123.85988385093415,
+        44.4238258884941,
+        -121.36390378473008,
+        45.86933700140941
+      ],
+      "Datasource": {
+        "type": "postgis",
+        "table": "osmcarto.street",
+        "key_field": "",
+        "geometry_field": "",
+        "extent_cache": "auto",
+        "extent": "-13788019.2,5531266.2,-13510167.97,5759435.05",
+        "host": "maps7.trimet.org",
+        "dbname": "trimet",
+        "user": "geoserve"
+      },
+      "id": "osmcarto_street",
+      "class": "",
+      "srs-name": "900913",
+      "srs": "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0.0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs +over",
+      "advanced": {},
+      "name": "osmcarto_street"
+    },
+    {
+      "geometry": "linestring",
+      "extent": [
+        -123.10432184352777,
+        45.269993245111536,
+        -122.34462603926656,
+        45.64656873426398
+      ],
+      "Datasource": {
+        "type": "postgis",
+        "table": "current.route",
+        "key_field": "",
+        "geometry_field": "",
+        "extent_cache": "auto",
+        "extent": "7531761,595332.9,7730396.3,727213",
+        "host": "maps7.trimet.org",
+        "dbname": "trimet",
+        "user": "geoserve"
+      },
+      "id": "current_route",
+      "class": "",
+      "srs-name": "custom",
+      "srs": "+proj=lcc +lat_1=46 +lat_2=44.33333333333334 +lat_0=43.66666666666666 +lon_0=-120.5 +x_0=2500000.0001424 +y_0=0 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=ft +no_defs ",
+      "advanced": {},
+      "name": "current_route"
+    },
+    {
+      "geometry": "linestring",
+      "extent": [
+        -122.98164567938002,
+        45.306872103481766,
+        -122.42216245051983,
+        45.61015087570122
+      ],
+      "Datasource": {
+        "type": "postgis",
+        "table": "current.rail",
+        "key_field": "",
+        "geometry_field": "",
+        "extent_cache": "auto",
+        "extent": "7563739.96189843,607778.184512392,7710256.64343011,714400.323942307",
+        "host": "maps7.trimet.org",
+        "dbname": "trimet",
+        "user": "geoserve",
+        "id": "current_rail",
+        "project": "tm-map-tiles",
+        "srs": "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0.0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs +over"
+      },
+      "id": "current_rail",
+      "class": "",
+      "srs-name": "custom",
+      "srs": "+proj=lcc +lat_1=46 +lat_2=44.33333333333334 +lat_0=43.66666666666666 +lon_0=-120.5 +x_0=2500000.0001424 +y_0=0 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=ft +no_defs ",
+      "advanced": {},
+      "name": "current_rail"
+    }
+  ],
+  "scale": 1,
+  "metatile": 2,
+  "name": "TriMet Map Tiles",
+  "description": "map tiles for trimet's web based mapping applications",
+  "attribution": ""
+}

@@ -1,0 +1,226 @@
+/* Resources:
+https://github.com/mapbox/osm-bright/tree/master/osm-bright
+https://github.com/gravitystorm/openstreetmap-carto */
+
+/* Old Zoom Levels
+
+zoom 1: 1209449
+zoom 2:  604724
+zoom 3:  302362 
+zoom 4:  151181 
+zoom 5:  75591 
+zoom 6:  37795
+zoom 7:  15118
+zoom 8:  7559
+zoom 9:  3780
+zoom 10: 1890  
+
+/* New Zoom Levels (based on mapnik openstreetmap):
+https://github.com/openstreetmap/mapnik-stylesheets/blob/master/zoom-to-scale.txt
+exact values can be used to generate additional zoom levels
+
+zoom level=9  scale_denom=1091958 exact_value=1091957.54693
+zoom level=10 scale_denom=545979
+zoom level=11 scale_denom=272989
+zoom level=12 scale_denom=136495
+zoom level=13 scale_denom=68247
+zoom level=14 scale_denom=34124
+zoom level=15 scale_denom=17062
+zoom level=16 scale_denom=8531
+zoom level=17 scale_denom=4266 
+zoom level=18 scale_denom=2133 exact_value=2132.72958385 */
+
+
+/* @title all streets */
+/* @abstract */
+[highway_type='street'] {
+	stroke-linecap: round;
+	stroke-linejoin: round;
+}
+
+/* @title freeways z9 and up */
+[@scale > 1091958] [highway_type='street'] [subtype='freeway'] {
+	stroke: #adadad;
+	stroke-width: 0.75;
+}
+
+/* @title streets z9 and down */
+[@scale < 1091958] [highway_type='street'] {
+	z-index: 0, 1;
+	label: [name];
+	font-family: Lucida Sans;
+	font-style: normal;
+	font-weight: regular;
+	halo-color: #ffffff;
+	halo-radius: 2;
+	halo-opacity: 0.8;
+	-gt-label-follow-line: true;
+	-gt-label-max-angle-delta: 20;
+}
+
+/* @title freeway color */
+[color_group='freeway'] {
+	stroke: #adadad, #ffffff;
+}
+
+/* @title arterial color */
+[color_group='arterial'] {
+	stroke: #d1d1d1, #ffffff;
+}
+
+/* @title local, service color */
+[color_group='local'], [color_group='service'] {
+	stroke: #dcdcdc , #ffffff;
+}
+
+/* ---ZOOM 9--- */
+/* @title freeways z9 */
+[@scale < 1091958] [@scale > 545979] [subtype='freeway'] {
+	stroke-width: 1.5, 0;
+}
+
+/* ---ZOOM 10--- */
+/* @title freeways z10 */
+[@scale < 545979] [@scale > 272989] [subtype='freeway'] {
+	stroke-width: 2, 0;
+}
+/* @title arterials z10 */
+[@scale < 545979] [@scale > 272989] [subtype='arterial'] {
+	stroke-width: 1, 0;
+}
+
+
+/* ---ZOOM 11--- */
+/* @title freeways z11 */
+[@scale < 272989] [@scale > 136495] [subtype='freeway'] {
+	stroke-width: 3, 2;
+}
+/* @title arterials z11 */
+[@scale < 272989] [@scale > 136495] [subtype='arterial'] {
+	stroke-width: 2, 0;
+}
+
+
+/* ---ZOOM 12--- */
+/* @title freeways z12 */
+[@scale < 136495] [@scale > 68247] [subtype='freeway'] {
+	stroke-width: 2.8, 2;
+}
+/* @title arterials z12 */
+[@scale < 136495] [@scale > 68247] [subtype='arterial'] {
+	stroke-width: 1.8, 1;
+}
+/* @title local streets z12 */
+[@scale < 136495] [@scale > 68247] [subtype='local'] {
+	stroke-width: 0.4, 0;
+}
+
+
+/* ---ZOOM 13--- */
+/* @title freeways z13 */
+[@scale < 68247] [@scale > 34124] [subtype='freeway'] {
+	stroke-width: 3.8, 3;
+}
+/* @title arterials z13 */
+[@scale < 68247] [@scale > 34124] [subtype='arterial'] {
+	stroke-width: 2.55, 1.75;
+}
+/* @title local streets z13 */
+[@scale < 68247] [@scale > 34124] [subtype='local'] {
+	stroke-width: 1.6, 0.8;
+}
+
+
+/* ---ZOOM 14--- */
+/* @title freeways z14 */
+[@scale < 34124] [@scale > 17062] [subtype='freeway'] {
+	stroke-width: 4.3, 3.5;
+}
+/* @title arterials z14 */
+[@scale < 34124] [@scale > 17062] [subtype='arterial'] {
+	stroke-width: 2.8, 2;
+}
+/* @title local streets z14 */
+[@scale < 34124] [@scale > 17062] [subtype='local'] {
+	stroke-width: 1.8, 1;
+}
+/* @title service roads z14 */
+[@scale < 34124] [@scale > 17062] [subtype='service'] {
+	stroke-width: 0.4, 0;
+}
+
+
+/* ---ZOOM 15--- */
+/* @title freeways z15 */
+[@scale < 17062] [@scale > 8531] [subtype='freeway'] {
+	stroke-width: 7, 6;
+}
+/* @title arterials z15 */
+[@scale < 17062] [@scale > 8531] [subtype='arterial'] {
+	stroke-width: 5, 4;
+}
+/* @title local streets z15 */
+[@scale < 17062] [@scale > 8531] [subtype='local'] {
+	stroke-width: 3, 2;
+}
+/* @title service roads z15 */
+[@scale < 17062] [@scale > 8531] [subtype='service'] {
+	stroke-width: 1.8, .8;
+}
+
+
+/* ---ZOOM 16--- */
+/* @title freeways z16*/
+[@scale < 8531] [@scale > 4266] [subtype='freeway'] {
+	stroke-width: 11.5, 10;
+}
+/* @title arterials z16 */
+[@scale < 8531] [@scale > 4266] [subtype='arterial'] {
+	stroke-width: 8.5, 7;
+}
+/* @title local streets z16 */
+[@scale < 8531] [@scale > 4266] [subtype='local'] {
+	stroke-width: 5.5, 4;
+}
+/* @title service roads z16 */
+[@scale < 8531] [@scale > 4266] [subtype='service'] {
+	stroke-width: 3, 1.5;
+}
+
+
+/* ---ZOOM 17--- */
+/* @title freeways z17 */
+[@scale < 4266] [@scale > 2133] [subtype='freeway'] {
+	stroke-width: 17, 15;
+}
+/* @title arterials z17 */
+[@scale < 4266] [@scale > 2133] [subtype='arterial'] {
+	stroke-width: 12.5, 10.5;
+}
+/* @title local streets z17*/
+[@scale < 4266] [@scale > 2133] [subtype='local'] {
+	stroke-width: 8, 6;
+}
+/* @title service roads z17 */
+[@scale < 4266] [@scale > 2133] [subtype='service'] {
+	stroke-width: 5, 3;
+}
+
+
+/* ---ZOOM 18--- */
+/* @title freeways z18 and below */
+[@scale < 2133] [subtype='freeway'] {
+	stroke-width: 22.5, 20;
+}
+/* @title arterials z18 and below */
+[@scale < 2133] [subtype='arterial'] {
+	stroke-width: 16.5, 14;
+}
+/* @title local streets z18 and below */
+[@scale < 2133] [subtype='local'] {
+	stroke-width: 10.5, 8;
+}
+/* @title service roads z18 and below */
+[@scale < 2133] [subtype='service'] {
+	stroke-width: 6.5, 4;
+}
