@@ -1,53 +1,54 @@
 // streets, trails and freight rail
 
-#osmcarto_street {
-	::streets [zoom > 10] [highway='service'], [highway='residential'], [highway='tertiary'], 
-    [highway='tertiary_link'], [highway='secondary'], [highway='secondary_link'], 
-    [highway='primary'], [highway='primary_link'], [highway='trunk'], [highway='trunk_link'], 
-    [highway='motorway'], [highway='motorway_link'] {
-    	::casing {
-    		line-color: #AAACA9;
-      		line-width: 3;
-      		line-cap: round;
-    	}
-    	::fill {
-      		line-color: #FEFFFC;
-    		line-width: 2;
-      		line-cap: round;
-        }
-    	/**::arterials [highway='secondary'], [highway='secondary_link'], [highway='primary'], 
-      	[highway='primary_link'] {
-      		line-width: 3;
-    	}
-    	::freeways [highway='trunk'], [highway='trunk_link'], [highway='motorway'], 
-      	[highway='motorway_link'] {
-    		line-width: 4;
-    	}**/
-    }
-  	
-  	::paths [highway='footway'], [highway='path'], [highway='cycleway'] {
-  		/**::casing {
-      		line-color: #FEFFFC;
-      		line-width: 1.5;
-      		line-dasharray: 1.5, 0.5;
-    	}**/
-    	::fill {
-    		line-color: #AAACA9;
-      		line-width: 1;
-      		line-dasharray: 1, 1.5;
-		}
-    }
-  	
-  	// these should come in until close zoom levels as they render weird further out
-  	::stairs [highway='steps'] {
-  		line-color: #AAACA9;
-      	line-width: 3;
-      	line-dasharray: 1, 1.5;
-  	}
+#streets-low-zm[zoom>=9][zoom<12] {
+  /*line-color: @street-casing;
+  line-join: round;
+  line-cap: round; */
+  
+  [road_class='freeway'] { line-color: @street-casing; }
+  [road_class='major_arterial'] { line-color: @street-casing; }
+  [road_class='minor_arterial'][zoom>10] { line-color: @street-casing; }
+  
+  [zoom=10] {
+    [road_class='freeway'] { line-width: 2; }
+    [road_class='major_arterial'] {line-width: 1; }
+  }
+  [zoom=11] {
+    [road_class='freeway'] { line-width: 3; }
+    [road_class='major_arterial'] {line-width: 2; }
+    [road_class='minor_arterial'] {line-width: 1; }
+  }
 }
 
 
-
-
-
-
+#streets-high-zm[zoom>=12][zoom<19] {
+  [road_class='freeway'],[road_class='arterial'],
+  [road_class='local'],[road_class='service'] {
+    ::casing {
+      line-color: @street-casing;
+      line-width: 3;
+      line-cap: round; }
+    //fill
+      line-color: @street-fill;
+      line-width: 2;
+      line-cap: round;
+  }
+  
+  [road_class='trail'] {
+    ::halo {
+      line-color: @street-fill;
+      line-width: 1.5;
+      line-dasharray: 1.5, 0.5;
+      line-opacity: 0.5 }
+    //fill
+    line-color: @trail;
+    line-width: 1;
+    line-dasharray: 1, 1.5; 
+  }
+  
+  [highway='steps'] {
+    line-color: @trail;
+    line-width: 3;
+    line-dasharray: 1, 1.5;
+  }
+}

@@ -6,14 +6,14 @@
     45.803
   ],
   "center": [
-    -122.6844,
-    45.5092,
-    9
+    -122.676,
+    45.5179,
+    13
   ],
   "format": "png",
   "interactivity": false,
-  "minzoom": 9,
-  "maxzoom": 19,
+  "minzoom": 10,
+  "maxzoom": 18,
   "srs": "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0.0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs +over",
   "Stylesheet": [
     "base.mss",
@@ -38,14 +38,18 @@
         "extent": "-13805437.88,5545182.58,-13502770.71,5756706.6",
         "host": "maps7.trimet.org",
         "dbname": "trimet",
-        "user": "geoserve"
+        "user": "geoserve",
+        "id": "osmcarto_polygon",
+        "project": "tm-map-tiles",
+        "srs": "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0.0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs +over"
       },
       "id": "osmcarto_polygon",
       "class": "",
       "srs-name": "900913",
       "srs": "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0.0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs +over",
       "advanced": {},
-      "name": "osmcarto_polygon"
+      "name": "osmcarto_polygon",
+      "status": "off"
     },
     {
       "geometry": "linestring",
@@ -57,7 +61,7 @@
       ],
       "Datasource": {
         "type": "postgis",
-        "table": "osmcarto.street",
+        "table": "(SELECT way, highway,\n  CASE\n    WHEN highway IN ('motorway') THEN 'freeway'\n    WHEN highway IN ('trunk', 'primary') THEN 'major_arterial'\n    WHEN highway IN ('secondary') THEN 'minor_arterial'\n  END AS road_class\nFROM osmcarto._line\nWHERE highway IN ('motorway', 'trunk', 'primary', 'secondary')) as streets_low",
         "key_field": "",
         "geometry_field": "",
         "extent_cache": "auto",
@@ -66,12 +70,41 @@
         "dbname": "trimet",
         "user": "geoserve"
       },
-      "id": "osmcarto_street",
+      "id": "streets-low-zm",
       "class": "",
       "srs-name": "900913",
       "srs": "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0.0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs +over",
       "advanced": {},
-      "name": "osmcarto_street"
+      "name": "streets-low-zm"
+    },
+    {
+      "geometry": "linestring",
+      "extent": [
+        -124.09583282817819,
+        43.99623771814903,
+        -119.31237769192659,
+        46.49249909221156
+      ],
+      "Datasource": {
+        "type": "postgis",
+        "table": "(SELECT way, highway, bridge, tunnel, layer,\n  CASE\n    WHEN highway IN ('motorway', 'trunk') THEN 'freeway'\n    WHEN highway IN ('primary', 'secondary') THEN 'arterial'\n    WHEN highway IN ('tertiary', 'residential', 'unclassified', 'road',  \n      'motorway_link') THEN 'local'\n    WHEN highway IN ('service', 'living_street', 'trunk_link', 'primary_link',\n      'secondary_link', 'tertiary_link') THEN 'service'\n    WHEN highway IN ('footway', 'path', 'cycleway', 'pedestrian') THEN 'trail'\n  END AS road_class\nFROM osmcarto._line\nWHERE highway IN ('motorway', 'motorway_link', 'trunk', 'trunk_link', \n  'primary', 'primary_link', 'secondary', 'secondary_link', 'tertiary', \n  'tertiary_link', 'residential', 'unclassified', 'service', 'living_street',\n  'road', 'track', 'pedestrian', 'footway', 'path', 'cycleway', 'steps')) as streets_high",
+        "key_field": "",
+        "geometry_field": "",
+        "extent_cache": "auto",
+        "extent": "-13814284.92,5464859.98,-13281793.13,5859626.88",
+        "host": "maps7.trimet.org",
+        "user": "geoserve",
+        "dbname": "trimet",
+        "id": "streets-high-zm",
+        "project": "tm-map-tiles",
+        "srs": "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0.0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs +over"
+      },
+      "id": "streets-high-zm",
+      "class": "",
+      "srs-name": "900913",
+      "srs": "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0.0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs +over",
+      "advanced": {},
+      "name": "streets-high-zm"
     },
     {
       "geometry": "linestring",
@@ -83,7 +116,7 @@
       ],
       "Datasource": {
         "type": "postgis",
-        "table": "current.route",
+        "table": "(SELECT *\nFROM current.route\nWHERE type = 1) as bus",
         "key_field": "",
         "geometry_field": "",
         "extent_cache": "auto",
@@ -92,12 +125,13 @@
         "dbname": "trimet",
         "user": "geoserve"
       },
-      "id": "current_route",
+      "id": "tm-bus",
       "class": "",
       "srs-name": "custom",
       "srs": "+proj=lcc +lat_1=46 +lat_2=44.33333333333334 +lat_0=43.66666666666666 +lon_0=-120.5 +x_0=2500000.0001424 +y_0=0 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=ft +no_defs ",
       "advanced": {},
-      "name": "current_route"
+      "name": "tm-bus",
+      "status": "off"
     },
     {
       "geometry": "linestring",
@@ -109,7 +143,7 @@
       ],
       "Datasource": {
         "type": "postgis",
-        "table": "current.rail",
+        "table": "(SELECT *\nFROM current.rail\nWHERE line != 'AUX') as tm_rail",
         "key_field": "",
         "geometry_field": "",
         "extent_cache": "auto",
@@ -117,16 +151,17 @@
         "host": "maps7.trimet.org",
         "dbname": "trimet",
         "user": "geoserve",
-        "id": "current_rail",
+        "id": "tm-rail",
         "project": "tm-map-tiles",
-        "srs": "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0.0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs +over"
+        "srs": "+proj=lcc +lat_1=46 +lat_2=44.33333333333334 +lat_0=43.66666666666666 +lon_0=-120.5 +x_0=2500000.0001424 +y_0=0 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=ft +no_defs "
       },
-      "id": "current_rail",
+      "id": "tm-rail",
       "class": "",
       "srs-name": "custom",
       "srs": "+proj=lcc +lat_1=46 +lat_2=44.33333333333334 +lat_0=43.66666666666666 +lon_0=-120.5 +x_0=2500000.0001424 +y_0=0 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=ft +no_defs ",
       "advanced": {},
-      "name": "current_rail"
+      "name": "tm-rail",
+      "status": "off"
     }
   ],
   "scale": 1,
