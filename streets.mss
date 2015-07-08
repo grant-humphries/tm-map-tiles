@@ -35,11 +35,11 @@
   }
   
   [road_class='trail'] {
-    ::halo {
+    /*::halo {
       line-color: @street-fill;
       line-width: 1.5;
       line-dasharray: 1.5, 0.5;
-      line-opacity: 0.5 }
+      line-opacity: 0.5 } */
     //fill
     line-color: @trail;
     line-width: 1;
