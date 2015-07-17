@@ -1,5 +1,10 @@
 // trimet transit lines
 
+#tm-district {
+  line-color: orange;
+  line-width: 1;
+}
+
 #tm-bus {
   line-color: @bus;
   line-width: 2.5;

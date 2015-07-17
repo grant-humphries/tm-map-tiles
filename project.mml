@@ -1,9 +1,9 @@
 {
   "bounds": [
-    -123.8407,
-    44.6618,
-    -121.4539,
-    45.803
+    -123.8,
+    44.68,
+    -121.5,
+    45.8
   ],
   "center": [
     -122.676,
@@ -61,7 +61,7 @@
       ],
       "Datasource": {
         "type": "postgis",
-        "table": "(SELECT way, highway,\n  CASE\n    WHEN highway IN ('motorway') THEN 'freeway'\n    WHEN highway IN ('trunk', 'primary') THEN 'major_arterial'\n    WHEN highway IN ('secondary') THEN 'minor_arterial'\n  END AS class\nFROM osmcarto._line\nWHERE highway IN ('motorway', 'trunk', 'primary', 'secondary')) as streets_low",
+        "table": "(SELECT way, highway,\n  CASE\n    WHEN highway IN ('motorway', 'motorway_link') THEN 'freeway'\n    WHEN highway IN ('trunk', 'primary') THEN 'highway'\n    WHEN highway IN ('secondary') THEN 'major_arterial'\n    WHEN highway IN ('tertiary') THEN 'minor_arterial'\n  END AS lw_class\nFROM osmcarto._line\nWHERE highway IN ('motorway', 'trunk', 'primary', 'secondary', 'tertiary')\n  OR 'motorway_link' = 'connector') AS streets_low",
         "key_field": "",
         "geometry_field": "",
         "extent_cache": "auto",
@@ -108,6 +108,36 @@
       "srs": "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0.0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs +over",
       "advanced": {},
       "name": "streets-high-zm"
+    },
+    {
+      "geometry": "polygon",
+      "extent": [
+        -123.13983079258432,
+        45.24012284716077,
+        -122.28827479556894,
+        45.665569022015084
+      ],
+      "Datasource": {
+        "type": "postgis",
+        "table": "current.service_district",
+        "key_field": "",
+        "geometry_field": "",
+        "extent_cache": "auto",
+        "extent": "7522268.63989104,584745.079622701,7744957.25164047,733815.246905565",
+        "host": "maps7.trimet.org",
+        "user": "geoserve",
+        "dbname": "trimet",
+        "id": "tm-district",
+        "project": "tm-map-tiles",
+        "srs": "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0.0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs +over"
+      },
+      "id": "tm-district",
+      "class": "",
+      "srs-name": "900913",
+      "srs": "+proj=lcc +lat_1=46 +lat_2=44.33333333333334 +lat_0=43.66666666666666 +lon_0=-120.5 +x_0=2500000.0001424 +y_0=0 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=ft +no_defs ",
+      "advanced": {},
+      "name": "tm-district",
+      "status": "off"
     },
     {
       "geometry": "linestring",
