@@ -61,14 +61,17 @@
       ],
       "Datasource": {
         "type": "postgis",
-        "table": "(SELECT way, highway,\n  CASE\n    WHEN highway IN ('motorway') THEN 'freeway'\n    WHEN highway IN ('trunk', 'primary') THEN 'major_arterial'\n    WHEN highway IN ('secondary') THEN 'minor_arterial'\n  END AS road_class\nFROM osmcarto._line\nWHERE highway IN ('motorway', 'trunk', 'primary', 'secondary')) as streets_low",
+        "table": "(SELECT way, highway,\n  CASE\n    WHEN highway IN ('motorway') THEN 'freeway'\n    WHEN highway IN ('trunk', 'primary') THEN 'major_arterial'\n    WHEN highway IN ('secondary') THEN 'minor_arterial'\n  END AS class\nFROM osmcarto._line\nWHERE highway IN ('motorway', 'trunk', 'primary', 'secondary')) as streets_low",
         "key_field": "",
         "geometry_field": "",
         "extent_cache": "auto",
         "extent": "-13788019.2,5531266.2,-13510167.97,5759435.05",
         "host": "maps7.trimet.org",
         "dbname": "trimet",
-        "user": "geoserve"
+        "user": "geoserve",
+        "id": "streets-low-zm",
+        "project": "tm-map-tiles",
+        "srs": "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0.0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs +over"
       },
       "id": "streets-low-zm",
       "class": "",
@@ -87,7 +90,7 @@
       ],
       "Datasource": {
         "type": "postgis",
-        "table": "(SELECT way, highway, bridge, tunnel, layer,\n  CASE\n    WHEN highway IN ('motorway', 'trunk') THEN 'freeway'\n    WHEN highway IN ('primary', 'secondary') THEN 'arterial'\n    WHEN highway IN ('tertiary', 'residential', 'unclassified', 'road',  \n      'motorway_link') THEN 'local'\n    WHEN highway IN ('service', 'living_street', 'trunk_link', 'primary_link',\n      'secondary_link', 'tertiary_link') THEN 'service'\n    WHEN highway IN ('footway', 'path', 'cycleway', 'pedestrian') THEN 'trail'\n  END AS road_class\nFROM osmcarto._line\nWHERE highway IN ('motorway', 'motorway_link', 'trunk', 'trunk_link', \n  'primary', 'primary_link', 'secondary', 'secondary_link', 'tertiary', \n  'tertiary_link', 'residential', 'unclassified', 'service', 'living_street',\n  'road', 'track', 'pedestrian', 'footway', 'path', 'cycleway', 'steps')) as streets_high",
+        "table": "(SELECT way, highway, bridge, tunnel, layer,\n  CASE\n    WHEN highway IN ('motorway', 'trunk') THEN 'freeway'\n    WHEN highway IN ('primary', 'secondary') THEN 'arterial'\n    WHEN highway IN ('tertiary', 'residential', 'unclassified', 'road',  \n      'motorway_link') THEN 'local'\n    WHEN highway IN ('service', 'living_street', 'trunk_link', 'primary_link',\n      'secondary_link', 'tertiary_link') THEN 'service'\n    WHEN highway IN ('footway', 'path', 'cycleway', 'pedestrian') THEN 'trail'\n  END AS class,\n  CASE\n    WHEN highway IN ('motorway', 'motorway_link', 'trunk', 'trunk_link', \n      'primary', 'primary_link', 'secondary', 'secondary_link', 'tertiary', \n      'tertiary_link', 'residential', 'unclassified', 'service', 'living_street',\n      'road') THEN 'street'\n    WHEN highway IN ('track', 'pedestrian', 'footway', 'path', 'cycleway',\n       'steps') THEN 'path'\n  END AS type\nFROM osmcarto._line\nWHERE highway IN ('motorway', 'motorway_link', 'trunk', 'trunk_link', \n  'primary', 'primary_link', 'secondary', 'secondary_link', 'tertiary', \n  'tertiary_link', 'residential', 'unclassified', 'service', 'living_street',\n  'road', 'track', 'pedestrian', 'footway', 'path', 'cycleway', 'steps')) as streets_high",
         "key_field": "",
         "geometry_field": "",
         "extent_cache": "auto",

@@ -11,6 +11,7 @@
 @street-fill: #fefffc;
 @street-casing: #aaaca9;
 @trail: @street-casing;
+@trail-halo: @street-fill;
 
 // trimet colors
 @max-blue: #275ab2;
