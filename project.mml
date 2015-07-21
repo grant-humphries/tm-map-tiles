@@ -23,6 +23,25 @@
   ],
   "Layer": [
     {
+      "geometry": "raster",
+      "extent": [
+        -123.58868230795728,
+        44.88228065940287,
+        -121.66032324426885,
+        46.18670384825766
+      ],
+      "id": "hillshade",
+      "class": "",
+      "Datasource": {
+        "file": "g:\\Rlis\\HILLRASTER\\hillshd_10m.tif"
+      },
+      "srs-name": "custom",
+      "srs": "+proj=lcc +lat_1=46 +lat_2=44.33333333333334 +lat_0=43.66666666666666 +lon_0=-120.5 +x_0=2500000.0001424 +y_0=0 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=ft +no_defs ",
+      "advanced": {},
+      "name": "hillshade",
+      "status": "off"
+    },
+    {
       "extent": [
         -124.01635851566606,
         44.5130396804514,
@@ -31,7 +50,7 @@
       ],
       "Datasource": {
         "type": "postgis",
-        "table": "osmcarto._polygon",
+        "table": "(SELECT way, COALESCE(leisure, p.natural) AS type\nFROM osmcarto._polygon p\nWHERE leisure IN ('park', 'garden')\n  --'natural' is a postgres keyword thus the column in the\n  --osm table must include the table name when referenced \n  OR p.natural = 'wood') AS parks",
         "key_field": "",
         "geometry_field": "",
         "extent_cache": "auto",
@@ -39,17 +58,66 @@
         "host": "maps7.trimet.org",
         "dbname": "trimet",
         "user": "geoserve",
-        "id": "osmcarto_polygon",
+        "id": "parks",
         "project": "tm-map-tiles",
         "srs": "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0.0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs +over"
       },
-      "id": "osmcarto_polygon",
+      "id": "parks",
       "class": "",
       "srs-name": "900913",
       "srs": "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0.0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs +over",
       "advanced": {},
-      "name": "osmcarto_polygon",
-      "status": "off"
+      "name": "parks"
+    },
+    {
+      "extent": [
+        -124.01635851566606,
+        44.5130396804514,
+        -121.29745306754403,
+        45.85226808342845
+      ],
+      "Datasource": {
+        "type": "postgis",
+        "table": "(SELECT way, COALESCE(waterway, p.natural)\nFROM osmcarto._polygon p\nWHERE waterway = 'riverbank'\n  --'natural' is a postgres keyword thus the column in the\n  --osm table must include the table name when referenced \n  OR p.natural = 'water') AS water",
+        "key_field": "",
+        "geometry_field": "",
+        "extent_cache": "auto",
+        "extent": "-13805437.88,5545182.58,-13502770.71,5756706.6",
+        "host": "maps7.trimet.org",
+        "dbname": "trimet",
+        "user": "geoserve"
+      },
+      "id": "water",
+      "class": "",
+      "srs-name": "900913",
+      "srs": "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0.0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs +over",
+      "advanced": {},
+      "name": "water"
+    },
+    {
+      "extent": [
+        -124.01635851566606,
+        44.5130396804514,
+        -121.29745306754403,
+        45.85226808342845
+      ],
+      "Datasource": {
+        "type": "postgis",
+        "table": "(SELECT way, building\nFROM osmcarto._polygon\nWHERE building IS NOT NULL) AS buildings",
+        "key_field": "",
+        "geometry_field": "",
+        "extent_cache": "auto",
+        "extent": "-13805437.88,5545182.58,-13502770.71,5756706.6",
+        "host": "maps7.trimet.org",
+        "dbname": "trimet",
+        "user": "geoserve"
+      },
+      "id": "buildings",
+      "class": "",
+      "srs-name": "900913",
+      "srs": "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0.0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs +over",
+      "advanced": {},
+      "name": "buildings"
     },
     {
       "geometry": "linestring",
@@ -61,7 +129,7 @@
       ],
       "Datasource": {
         "type": "postgis",
-        "table": "(SELECT way, highway,\n  CASE\n    WHEN highway IN ('motorway', 'motorway_link') THEN 'freeway'\n    WHEN highway IN ('trunk', 'primary') THEN 'highway'\n    WHEN highway IN ('secondary') THEN 'major_arterial'\n    WHEN highway IN ('tertiary') THEN 'minor_arterial'\n  END AS lw_class\nFROM osmcarto._line\nWHERE highway IN ('motorway', 'trunk', 'primary', 'secondary', 'tertiary')\n  OR 'motorway_link' = 'connector') AS streets_low",
+        "table": "(SELECT way, highway,\n  CASE\n    WHEN highway IN ('motorway', 'motorway_link') THEN 'freeway'\n    WHEN highway IN ('trunk', 'primary') THEN 'highway'\n    WHEN highway IN ('secondary') THEN 'major_arterial'\n    WHEN highway IN ('tertiary') THEN 'minor_arterial'\n  END AS class_lz,\n  CASE\n     WHEN highway IN ('motorway', 'motorway_link') THEN 4\n    WHEN highway IN ('trunk', 'primary') THEN 3\n    WHEN highway IN ('secondary') THEN 2\n    WHEN highway IN ('tertiary') THEN 1\n  END AS z_order\nFROM osmcarto._line\nWHERE highway IN ('motorway', 'trunk', 'primary', 'secondary', 'tertiary')\n  OR 'motorway_link' = 'connector'\nORDER BY z_order) AS streets_low",
         "key_field": "",
         "geometry_field": "",
         "extent_cache": "auto",
@@ -90,7 +158,7 @@
       ],
       "Datasource": {
         "type": "postgis",
-        "table": "(SELECT way, highway, bridge, tunnel, layer,\n  CASE\n    WHEN highway IN ('motorway', 'trunk') THEN 'freeway'\n    WHEN highway IN ('primary', 'secondary') THEN 'arterial'\n    WHEN highway IN ('tertiary', 'residential', 'unclassified', 'road',  \n      'motorway_link') THEN 'local'\n    WHEN highway IN ('service', 'living_street', 'trunk_link', 'primary_link',\n      'secondary_link', 'tertiary_link') THEN 'service'\n    WHEN highway IN ('footway', 'path', 'cycleway', 'pedestrian') THEN 'trail'\n  END AS class,\n  CASE\n    WHEN highway IN ('motorway', 'motorway_link', 'trunk', 'trunk_link', \n      'primary', 'primary_link', 'secondary', 'secondary_link', 'tertiary', \n      'tertiary_link', 'residential', 'unclassified', 'service', 'living_street',\n      'road') THEN 'street'\n    WHEN highway IN ('track', 'pedestrian', 'footway', 'path', 'cycleway',\n       'steps') THEN 'path'\n  END AS type\nFROM osmcarto._line\nWHERE highway IN ('motorway', 'motorway_link', 'trunk', 'trunk_link', \n  'primary', 'primary_link', 'secondary', 'secondary_link', 'tertiary', \n  'tertiary_link', 'residential', 'unclassified', 'service', 'living_street',\n  'road', 'track', 'pedestrian', 'footway', 'path', 'cycleway', 'steps')) as streets_high",
+        "table": "(SELECT way, highway, bridge, tunnel, layer,\n  CASE\n    WHEN highway IN ('motorway') THEN 'freeway'\n    WHEN highway IN ('trunk', 'primary', 'secondary') THEN 'arterial'\n    WHEN highway IN ('tertiary', 'residential', 'unclassified', 'road',  \n      'motorway_link') THEN 'local'\n    WHEN highway IN ('service', 'living_street', 'trunk_link', 'primary_link',\n      'secondary_link', 'tertiary_link') THEN 'service'\n    WHEN highway IN ('footway', 'path', 'cycleway', 'pedestrian') THEN 'trail'\n  END AS class,\n  CASE\n    WHEN highway IN ('motorway', 'motorway_link', 'trunk', 'trunk_link', \n      'primary', 'primary_link', 'secondary', 'secondary_link', 'tertiary', \n      'tertiary_link', 'residential', 'unclassified', 'service', 'living_street',\n      'road') THEN 'street'\n    WHEN highway IN ('track', 'pedestrian', 'footway', 'path', 'cycleway',\n       'steps') THEN 'path'\n  END AS type\nFROM osmcarto._line\nWHERE highway IN ('motorway', 'motorway_link', 'trunk', 'trunk_link', \n  'primary', 'primary_link', 'secondary', 'secondary_link', 'tertiary', \n  'tertiary_link', 'residential', 'unclassified', 'service', 'living_street',\n  'road', 'track', 'pedestrian', 'footway', 'path', 'cycleway', 'steps')) AS streets_high",
         "key_field": "",
         "geometry_field": "",
         "extent_cache": "auto",
@@ -133,7 +201,7 @@
       },
       "id": "tm-district",
       "class": "",
-      "srs-name": "900913",
+      "srs-name": "custom",
       "srs": "+proj=lcc +lat_1=46 +lat_2=44.33333333333334 +lat_0=43.66666666666666 +lon_0=-120.5 +x_0=2500000.0001424 +y_0=0 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=ft +no_defs ",
       "advanced": {},
       "name": "tm-district",
@@ -149,7 +217,7 @@
       ],
       "Datasource": {
         "type": "postgis",
-        "table": "(SELECT *\nFROM current.route\nWHERE type = 1) as bus",
+        "table": "(SELECT *\nFROM current.route\nWHERE type = 1) AS bus",
         "key_field": "",
         "geometry_field": "",
         "extent_cache": "auto",
@@ -176,7 +244,7 @@
       ],
       "Datasource": {
         "type": "postgis",
-        "table": "(SELECT *\nFROM current.rail\nWHERE line != 'AUX') as tm_rail",
+        "table": "(SELECT *\nFROM current.rail\nWHERE line != 'AUX') AS tm_rail",
         "key_field": "",
         "geometry_field": "",
         "extent_cache": "auto",

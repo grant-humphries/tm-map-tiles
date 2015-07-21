@@ -1,8 +1,9 @@
 // trimet transit lines
 
 #tm-district {
-  line-color: orange;
+  line-color: @tm-district;
   line-width: 1;
+  line-dasharray: 4, 2;
 }
 
 #tm-bus {
