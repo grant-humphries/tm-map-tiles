@@ -18,7 +18,12 @@ Map {background-color: @background;}
   //line-color: @water-casing;
 }
 
-#buildings[zoom>=16] {
-    polygon-fill: @building;
-  }
+#buildings[zoom>=14] {
+  polygon-fill: @building;
+  
+  [zoom>=17] { 
+    building-fill: @building;
+    building-height: 1.5;
+    building-fill-opacity: 0.75;
+  }  
 }

@@ -129,7 +129,7 @@
       ],
       "Datasource": {
         "type": "postgis",
-        "table": "(SELECT way, highway,\n  CASE\n    WHEN highway IN ('motorway', 'motorway_link') THEN 'freeway'\n    WHEN highway IN ('trunk', 'primary') THEN 'highway'\n    WHEN highway IN ('secondary') THEN 'major_arterial'\n    WHEN highway IN ('tertiary') THEN 'minor_arterial'\n  END AS class_lz,\n  CASE\n     WHEN highway IN ('motorway', 'motorway_link') THEN 4\n    WHEN highway IN ('trunk', 'primary') THEN 3\n    WHEN highway IN ('secondary') THEN 2\n    WHEN highway IN ('tertiary') THEN 1\n  END AS z_order\nFROM osmcarto._line\nWHERE highway IN ('motorway', 'trunk', 'primary', 'secondary', 'tertiary')\n  OR 'motorway_link' = 'connector'\nORDER BY z_order) AS streets_low",
+        "table": "(SELECT way, highway,\n  CASE\n    WHEN highway IN ('motorway', 'motorway_link') THEN 'freeway'\n    WHEN highway IN ('trunk', 'primary') THEN 'highway'\n    WHEN highway IN ('secondary') THEN 'major_arterial'\n    WHEN highway IN ('tertiary') THEN 'minor_arterial'\n  END AS class_lz,\n  CASE\n     WHEN highway IN ('motorway', 'motorway_link') THEN 4\n    WHEN highway IN ('trunk', 'primary') THEN 3\n    WHEN highway IN ('secondary') THEN 2\n    WHEN highway IN ('tertiary') THEN 1\n  END AS class_order\nFROM osmcarto._line\nWHERE highway IN ('motorway', 'trunk', 'primary', 'secondary', 'tertiary')\n  OR 'motorway_link' = 'connector'\nORDER BY class_order) AS streets_low",
         "key_field": "",
         "geometry_field": "",
         "extent_cache": "auto",
@@ -158,7 +158,7 @@
       ],
       "Datasource": {
         "type": "postgis",
-        "table": "(SELECT way, highway, bridge, tunnel, layer,\n  CASE\n    WHEN highway IN ('motorway') THEN 'freeway'\n    WHEN highway IN ('trunk', 'primary', 'secondary') THEN 'arterial'\n    WHEN highway IN ('tertiary', 'residential', 'unclassified', 'road',  \n      'motorway_link') THEN 'local'\n    WHEN highway IN ('service', 'living_street', 'trunk_link', 'primary_link',\n      'secondary_link', 'tertiary_link') THEN 'service'\n    WHEN highway IN ('footway', 'path', 'cycleway', 'pedestrian') THEN 'trail'\n  END AS class,\n  CASE\n    WHEN highway IN ('motorway', 'motorway_link', 'trunk', 'trunk_link', \n      'primary', 'primary_link', 'secondary', 'secondary_link', 'tertiary', \n      'tertiary_link', 'residential', 'unclassified', 'service', 'living_street',\n      'road') THEN 'street'\n    WHEN highway IN ('track', 'pedestrian', 'footway', 'path', 'cycleway',\n       'steps') THEN 'path'\n  END AS type\nFROM osmcarto._line\nWHERE highway IN ('motorway', 'motorway_link', 'trunk', 'trunk_link', \n  'primary', 'primary_link', 'secondary', 'secondary_link', 'tertiary', \n  'tertiary_link', 'residential', 'unclassified', 'service', 'living_street',\n  'road', 'track', 'pedestrian', 'footway', 'path', 'cycleway', 'steps')) AS streets_high",
+        "table": "(SELECT way, highway, 'no' as bridge, 'no' as tunnel,\n  CASE\n    WHEN highway IN ('motorway') THEN 'freeway'\n    WHEN highway IN ('trunk', 'primary', 'secondary') THEN 'arterial'\n    WHEN highway IN ('tertiary', 'residential', 'unclassified', 'road',  \n      'motorway_link', 'primary_link', 'secondary_link' ) THEN 'local'\n    WHEN highway IN ('service', 'living_street', 'trunk_link', \n      'tertiary_link') THEN 'service'\n    WHEN highway IN ('footway', 'path', 'cycleway', 'pedestrian') THEN 'trail'\n  END AS class,\n  CASE\n    WHEN highway IN ('motorway', 'motorway_link', 'trunk', 'trunk_link', \n      'primary', 'primary_link', 'secondary', 'secondary_link', 'tertiary', \n      'tertiary_link', 'residential', 'unclassified', 'service', 'living_street',\n      'road') THEN 'street'\n    WHEN highway IN ('track', 'pedestrian', 'footway', 'path', 'cycleway',\n       'steps') THEN 'path'\n  END AS type\nFROM osmcarto._line\nWHERE highway IS NOT NULL\n  AND bridge IS NULL\n  AND tunnel IS NULL) AS streets_high",
         "key_field": "",
         "geometry_field": "",
         "extent_cache": "auto",
@@ -176,6 +176,35 @@
       "srs": "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0.0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs +over",
       "advanced": {},
       "name": "streets-high-zm"
+    },
+    {
+      "geometry": "linestring",
+      "extent": [
+        -124.09583282817819,
+        43.99623771814903,
+        -119.31237769192659,
+        46.49249909221156
+      ],
+      "Datasource": {
+        "type": "postgis",
+        "table": "(SELECT way, highway, 'yes' as bridge, 'no' as tunnel,\n  component, c_order, COALESCE(layer, '1') as layer,\n  CASE\n    WHEN highway IN ('motorway') THEN 'freeway'\n    WHEN highway IN ('trunk', 'primary', 'secondary') THEN 'arterial'\n    WHEN highway IN ('tertiary', 'residential', 'unclassified', 'road',  \n      'motorway_link', 'primary_link', 'secondary_link' ) THEN 'local'\n    WHEN highway IN ('service', 'living_street', 'trunk_link', \n      'tertiary_link') THEN 'service'\n    WHEN highway IN ('footway', 'path', 'cycleway', 'pedestrian') THEN 'trail'\n  END AS class,\n  CASE\n    WHEN highway IN ('motorway', 'motorway_link', 'trunk', 'trunk_link', \n      'primary', 'primary_link', 'secondary', 'secondary_link', 'tertiary', \n      'tertiary_link', 'residential', 'unclassified', 'service', 'living_street',\n      'road') THEN 'street'\n    WHEN highway IN ('track', 'pedestrian', 'footway', 'path', 'cycleway',\n       'steps') THEN 'path'\n  END AS type\nFROM (\n  WITH line_components(component, c_order) AS (\n    VALUES ('casing', 1), ('backing', 2), ('fill', 3))\n  SELECT *\n  FROM osmcarto._line brg, line_components lc\n  WHERE highway IS NOT NULL\n    AND bridge NOT IN ('', 'no', '0')) AS bridge_components\nORDER BY layer, c_order) AS bridges",
+        "key_field": "",
+        "geometry_field": "",
+        "extent_cache": "auto",
+        "extent": "-13814284.92,5464859.98,-13281793.13,5859626.88",
+        "host": "maps7.trimet.org",
+        "dbname": "trimet",
+        "user": "geoserve",
+        "id": "bridges",
+        "project": "tm-map-tiles",
+        "srs": "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0.0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs +over"
+      },
+      "id": "bridges",
+      "class": "",
+      "srs-name": "900913",
+      "srs": "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0.0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs +over",
+      "advanced": {},
+      "name": "bridges"
     },
     {
       "geometry": "polygon",
