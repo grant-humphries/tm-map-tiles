@@ -50,7 +50,7 @@
       ],
       "Datasource": {
         "type": "postgis",
-        "table": "(SELECT way, COALESCE(leisure, p.natural, landuse, amenity) AS type\nFROM osmcarto._polygon p\nWHERE leisure IN ('park', 'garden', 'stadium')\n  --'natural' is a postgres keyword thus the column in the\n  --osm table must include the table name when referenced \n  OR p.natural = 'wood'\n  OR landuse IN ('cemetery', 'grass')\n  OR amenity = 'grave_yard') AS parks",
+        "table": "(SELECT way, COALESCE(p.natural, landuse, leisure, amenity) AS type\nFROM osmcarto._polygon p\nWHERE leisure IN ('park', 'garden', 'stadium', 'golf_course')\n  --'natural' is a postgres keyword thus the column in the\n  --osm table must include the table name when referenced \n  OR p.natural IN  ('wood', 'heath', 'wetlands')\n  OR landuse IN ('cemetery', 'grass', 'forest')\n  OR amenity = 'grave_yard') AS parks",
         "key_field": "",
         "geometry_field": "",
         "extent_cache": "auto",
@@ -78,7 +78,7 @@
       ],
       "Datasource": {
         "type": "postgis",
-        "table": "(SELECT way, COALESCE(waterway, p.natural)\nFROM osmcarto._polygon p\nWHERE waterway = 'riverbank'\n  --'natural' is a postgres keyword thus the column in the\n  --osm table must include the table name when referenced \n  OR p.natural = 'water') AS water",
+        "table": "(SELECT way, COALESCE(waterway, p.natural)\nFROM osmcarto._polygon p\nWHERE waterway = 'riverbank'\n  --'natural' is a postgres keyword thus the column in the\n  --osm table must include the table name when referenced \n  OR p.natural = 'water'\n  OR landuse='reservoir') AS water",
         "key_field": "",
         "geometry_field": "",
         "extent_cache": "auto",

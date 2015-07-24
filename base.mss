@@ -2,13 +2,24 @@
 
 Map {background-color: @background;}
 
-#hillshade[zoom<16]{
-  raster-opacity: 0.15;
+#hillshade[zoom<16] {
+  raster-opacity: .15;
 }
 
 #parks {
-  polygon-fill: @park;
-  polygon-smooth: 0;
+  polygon-fill: gray; 
+  //polygon-smooth: 1;
+  
+  // values to consider adding:
+  //natural='scrub'
+  
+  [type='park'] { polygon-fill: @park; }
+  [type='wood'],[type='forest'] { polygon-fill: @wood; }
+  [type='stadium'] { polygon-fill: @stadium; }
+  [type='garden'] { polygon-fill: @garden; }
+  [type='cemetery'],[type='grave_yard'] { polygon-fill: @cemetery; }
+  [type='grass'],[type='golf_course'],[type='heath'] { polygon-fill: @grass; }
+  [type='wetland'] { polygon-fill: @wetland }
 }
 
 #water {
@@ -18,12 +29,14 @@ Map {background-color: @background;}
   //line-color: @water-casing;
 }
 
-#buildings[zoom>=14] {
-  polygon-fill: @building;
-  
-  [zoom>=17] { 
+#buildings[zoom>=14][zoom<=18] {
+  [zoom>=14][zoom<=16] { polygon-fill: @building; }
+  [zoom>=17][zoom<=18] {
     building-fill: @building;
-    building-height: 1.5;
-    building-fill-opacity: 0.75;
-  }  
+    building-fill-opacity: 1;
+    polygon-fill: hsla(0,0,0,0);
+    
+    [zoom=17] { building-height: 2; }
+    [zoom=18] { building-height: 3; }
+  }
 }

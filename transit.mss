@@ -12,15 +12,15 @@
   
   [zoom=11] {
 	[frequent=true] { line-width: 1; }
-    [frequent=false] { line-width: 0.4; }
+    [frequent=false] { line-width: .4; }
   }
   [zoom=12] {
 	[frequent=true] { line-width: 1; }
-    [frequent=false] { line-width: 0.4; }
+    [frequent=false] { line-width: .4; }
   }
   [zoom=13] {
 	[frequent=true] { line-width: 1; }
-    [frequent=false] { line-width: 0.4; }
+    [frequent=false] { line-width: .4; }
   }
   [zoom=14] {
 	[frequent=true] { line-width: @loc_z14; }
