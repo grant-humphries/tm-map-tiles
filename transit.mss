@@ -6,9 +6,42 @@
   line-dasharray: 4, 2;
 }
 
-#tm-bus {
-  line-color: @bus;
-  line-width: 2.5;
+#tm-bus[zoom>=11] {
+  [frequent=true] { line-color: @bus; }
+  [frequent=false] { line-color: @bus; }
+  
+  [zoom=11] {
+	[frequent=true] { line-width: 1; }
+    [frequent=false] { line-width: 0.4; }
+  }
+  [zoom=12] {
+	[frequent=true] { line-width: 1; }
+    [frequent=false] { line-width: 0.4; }
+  }
+  [zoom=13] {
+	[frequent=true] { line-width: 1; }
+    [frequent=false] { line-width: 0.4; }
+  }
+  [zoom=14] {
+	[frequent=true] { line-width: @loc_z14; }
+    [frequent=false] { line-width: @srv_z14; }
+  }
+  [zoom=15] {
+	[frequent=true] { line-width: @loc_z15; }
+    [frequent=false] { line-width: @srv_z15; }
+  }
+  [zoom=16] {
+	[frequent=true] { line-width: @loc_z16; }
+    [frequent=false] { line-width: @srv_z16; }
+  }
+  [zoom=17] {
+	[frequent=true] { line-width: @loc_z17; }
+    [frequent=false] { line-width: @srv_z17; }
+  }
+  [zoom=18] {
+	[frequent=true] { line-width: @loc_z18; }
+    [frequent=false] { line-width: @srv_z18; }
+  }
 }
 
 #tm-rail {
