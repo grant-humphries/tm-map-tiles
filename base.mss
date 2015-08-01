@@ -36,7 +36,7 @@ Map {background-color: @background;}
     building-fill-opacity: 1;
     polygon-fill: hsla(0,0,0,0);
     
-    [zoom=17] { building-height: 2; }
+    [zoom=17] { building-height: 1; }
     [zoom=18] { building-height: 3; }
   }
 }

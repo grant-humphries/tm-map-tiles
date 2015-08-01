@@ -12,7 +12,7 @@
 @grass: hsl(90, .4, .9);
 @park: hsl(120, .4, .85);
 @stadium: hsl(128, .45, .8);
-@wood: hsl(135, .36, .8);
+@wood: hsl(135, .27, .8);
 @wetland: hsl(165, .3, .8);
 
 @building: #e0e0e0;
