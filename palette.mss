@@ -20,7 +20,7 @@
 // streets, trails and rail
 @street-light: #fff;
 @street-dark: #dfdfdf;
-@street-casing: #adadad;
+@street-casing: hsl(0, 0, .68);
 @trail: @street-casing;
 @path-halo: @street-light;
 
@@ -40,3 +40,4 @@
 @park-old: #d5ddbb;
 @water-old: #c9d9d9;
 @water-casing-old: #abc4c4;
+@street-casing-old: #adadad;
