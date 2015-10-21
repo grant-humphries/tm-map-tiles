@@ -5,8 +5,12 @@
 @water: hsl(220, 1, .93);
 
 // park/natural area colors
-//@park: hsl(136, .27, .8); //I like this color and likely want to
-//integrate it for one of the natural areas
+// * @park: hsl(136, .27, .8); //I like this color and likely want to
+// integrate it for one of the natural areas
+// * consider using transparency here as well as overlapping features
+//  will then interact
+// * may also want to reduce the number of green
+// shades down to 4
 @cemetery: hsl(135, .2, .85);
 @garden: hsl(90, .5, .8);
 @grass: hsl(90, .4, .9);
@@ -20,7 +24,7 @@
 // streets, trails and rail
 @street-light: #fff;
 @street-dark: #dfdfdf;
-@street-casing: hsl(0, 0, .68);
+@street-casing: #adadad;//hsl(0, 0, .68);
 @trail: @street-casing;
 @path-halo: @street-light;
 

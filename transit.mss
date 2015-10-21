@@ -7,6 +7,10 @@
 }
 
 #tm-bus[zoom>=11] {
+  line-join: round;
+  line-cap: round;
+  line-smooth: 0.5;
+  
   [frequent=true] { line-color: @bus; }
   [frequent=false] { line-color: @bus; }
   
@@ -23,8 +27,8 @@
     [frequent=false] { line-width: .4; }
   }
   [zoom=14] {
-	[frequent=true] { line-width: @loc_z14; }
-    [frequent=false] { line-width: @srv_z14; }
+	[frequent=true] { line-width: 1; }
+    [frequent=false] { line-width: .4; }
   }
   [zoom=15] {
 	[frequent=true] { line-width: @loc_z15; }

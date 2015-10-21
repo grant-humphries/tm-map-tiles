@@ -129,7 +129,7 @@
       ],
       "Datasource": {
         "type": "postgis",
-        "table": "(SELECT way, highway\nFROM osmcarto._point\nWHERE highway = 'turning_circle') AS turning_circles",
+        "table": "(SELECT way, highway, 'casing' AS component\nFROM osmcarto._point\nWHERE highway = 'turning_circle') AS turning_circles",
         "key_field": "",
         "geometry_field": "",
         "extent_cache": "auto",
@@ -155,7 +155,7 @@
       ],
       "Datasource": {
         "type": "postgis",
-        "table": "(WITH hwy_attr(hwy_vals, hwy_class, hwy_type, hwy_order) AS (\n  VALUES (ARRAY['motorway'], 'freeway', 'street',  1),\n  (ARRAY['trunk', 'primary', 'secondary'], 'arterial', 'street', 1),\n  (ARRAY['tertiary', 'residential', 'unclassified', 'road',\n    'motorway_link', 'trunk_link', 'primary_link', 'secondary_link'],\n    'local', 'street', 1),\n  (ARRAY['service', 'living_street', 'tertiary_link'], 'service',\n    'street', 1),\n  (ARRAY['track'], 'dirt-road', 'path', 2),\n  (ARRAY['rail'], 'mainline', 'freight-rail', 3),\n  (ARRAY['crossover', 'siding', 'spur', 'yard'], 'siding', 'freight-rail', 3),\n  (ARRAY['footway', 'path', 'cycleway', 'pedestrian'], 'trail',\n    'path', 4),\n  (ARRAY['steps'], 'stairs', 'path', 5)),\n\nline_components(component, comp_order) AS (\n    VALUES ('casing', 1), ('backing', 2), ('fill', 3))\n\nSELECT way, COALESCE(highway, service, railway) AS highway, \n   COALESCE(layer, '1')::int AS layer, ha.hwy_class, ha.hwy_type, \n   lc.component, 'no' AS bridge, 'yes' AS tunnel\nFROM osmcarto._line l, line_components lc, hwy_attr ha\nWHERE (highway IS NOT NULL OR railway = 'rail')\n  AND tunnel IS NOT NULL\n  AND tunnel NOT IN ('no', '0')\n  AND COALESCE(highway, service, railway) = ANY(ha.hwy_vals) \nORDER BY layer, lc.comp_order, ha.hwy_order) AS tunnels",
+        "table": "(WITH hwy_attr(hwy_vals, hwy_class, hwy_type, hwy_order) AS (\n  VALUES (ARRAY['motorway'], 'freeway', 'street',  1),\n  (ARRAY['trunk', 'primary', 'secondary'], 'arterial', 'street', 1),\n  (ARRAY['tertiary', 'residential', 'unclassified', 'road',\n    'motorway_link', 'trunk_link', 'primary_link', 'secondary_link'],\n    'local', 'street', 1),\n  (ARRAY['service', 'living_street', 'tertiary_link'], 'service', 'street', 1),\n  (ARRAY['crossover', 'siding', 'spur', 'yard'], 'siding', 'freight-rail', 3),\n  (ARRAY['rail'], 'mainline', 'freight-rail', 3),  \n  (ARRAY['track'], 'dirt-road', 'path', 2),  \n  (ARRAY['footway', 'path', 'cycleway', 'pedestrian', 'bridleway'], 'trail', 'path', 4),\n  (ARRAY['steps'], 'stairs', 'path', 4)),\n\nline_components(component, comp_order) AS (\n    VALUES ('casing', 1), ('fill', 2))\n\nSELECT way, COALESCE(highway, service, railway) AS highway, \n   COALESCE(layer, '1')::int AS layer, ha.hwy_class, ha.hwy_type, \n   lc.component, 'tunnel' AS passage\nFROM osmcarto._line l, hwy_attr ha, line_components lc\nWHERE (highway IS NOT NULL OR railway = 'rail')\n  AND tunnel IS NOT NULL\n  AND tunnel NOT IN ('no', '0')\n  AND COALESCE(highway, service, railway) = ANY(ha.hwy_vals) \nORDER BY layer, ha.hwy_order, lc.comp_order) AS tunnels",
         "key_field": "",
         "geometry_field": "way",
         "extent_cache": "auto",
@@ -184,7 +184,7 @@
       ],
       "Datasource": {
         "type": "postgis",
-        "table": "(SELECT way, highway,\n  CASE\n    WHEN highway IN ('motorway', 'motorway_link') THEN 'freeway'\n    WHEN highway IN ('trunk', 'primary') THEN 'highway'\n    WHEN highway IN ('secondary') THEN 'major_arterial'\n    WHEN highway IN ('tertiary') THEN 'minor_arterial'\n  END AS class_lz,\n  CASE\n     WHEN highway IN ('motorway', 'motorway_link') THEN 4\n    WHEN highway IN ('trunk', 'primary') THEN 3\n    WHEN highway IN ('secondary') THEN 2\n    WHEN highway IN ('tertiary') THEN 1\n  END AS class_order\nFROM osmcarto._line\nWHERE highway IN ('motorway', 'trunk', 'primary', 'secondary', 'tertiary')\n  OR 'motorway_link' = 'connector'\nORDER BY class_order) AS streets_low",
+        "table": "(WITH street_attr(hwy_vals, lz_class, lz_order) AS (\n  VALUES (ARRAY['motorway', 'motorway_link'], 'freeway', 4),\n  (ARRAY['trunk', 'primary'], 'highway', 3),\n  (ARRAY['secondary'], 'major-arterial', 2),\n  (ARRAY['tertiary'], 'minor-arterial', 1))\n\nSELECT way, highway, lz_class, lz_order\nFROM osmcarto._line l, street_attr sa\nWHERE l.highway = ANY(sa.hwy_vals)\n  AND (highway IN (\n    'motorway', 'trunk', 'primary', 'secondary', 'tertiary')\n  OR 'motorway_link' = 'connector')\nORDER BY lz_order) AS streets_low_zm",
         "key_field": "",
         "geometry_field": "",
         "extent_cache": "auto",
@@ -213,7 +213,7 @@
       ],
       "Datasource": {
         "type": "postgis",
-        "table": "(WITH hwy_attr(hwy_vals, hwy_class, hwy_type, hwy_order) AS (\n  VALUES (ARRAY['motorway'], 'freeway', 'street', 1),\n  (ARRAY['trunk', 'primary', 'secondary'], 'arterial', 'street', 1),\n  (ARRAY['tertiary', 'residential', 'unclassified', 'road', 'motorway_link' , 'trunk_link'\n    'primary_link', 'secondary_link'], 'local', 'street', 1), \n  (ARRAY['service', 'living_street', 'tertiary_link'], 'service', 'street', 1),\n  (ARRAY['track'], 'dirt-road', 'path', 2),\n  (ARRAY['rail'], 'mainline', 'freight-rail', 3),\n  (ARRAY['crossover', 'siding', 'spur', 'yard'], 'siding', 'freight-rail', 3),\n  (ARRAY['footway', 'path', 'cycleway', 'pedestrian'], 'trail',  'path', 4),\n  (ARRAY['steps'], 'stairs', 'path', 5))\n\nSELECT way, COALESCE(highway, service, railway) AS highway,\n  ha.hwy_class, ha.hwy_type, 'no' AS bridge, 'no' AS tunnel\nFROM osmcarto._line ln, hwy_attr ha\nWHERE (highway IS NOT NULL OR railway = 'rail')\n  AND bridge IS NULL\n  AND tunnel IS NULL\n  AND COALESCE(highway, service, railway) = ANY(ha.hwy_vals)\nORDER BY ha.hwy_order) AS streets_high_zm",
+        "table": "(WITH hwy_attr(hwy_vals, hwy_class, hwy_type, hwy_order) AS (\n  VALUES (ARRAY['motorway'], 'freeway', 'street', 1),\n  (ARRAY['trunk', 'primary', 'secondary'], 'arterial', 'street', 1),\n  (ARRAY['tertiary', 'residential', 'unclassified', 'road', 'motorway_link' , 'trunk_link',\n    'primary_link', 'secondary_link'], 'local', 'street', 1), \n  (ARRAY['service', 'living_street', 'tertiary_link'], 'service', 'street', 1),\n  (ARRAY['rail'], 'mainline', 'freight-rail', 3),\n  (ARRAY['crossover', 'siding', 'spur', 'yard'], 'siding', 'freight-rail', 3),\n  (ARRAY['track'], 'dirt-road', 'path', 4),\n  (ARRAY['footway', 'path', 'cycleway', 'pedestrian', 'bridleway'], 'trail',  'path', 4),\n  (ARRAY['steps'], 'stairs', 'path', 4)),\n\nline_components(component, comp_order) AS (\n  VALUES ('casing', 1), ('fill', 2))\n\nSELECT way, COALESCE(highway, service, railway) AS highway,\n  ha.hwy_class, ha.hwy_type, lc.component, 'ground' AS passage\nFROM osmcarto._line ln, hwy_attr ha, line_components lc\nWHERE (highway IS NOT NULL OR railway = 'rail')\n  AND bridge IS NULL\n  AND tunnel IS NULL\n  AND COALESCE(highway, service, railway) = ANY(ha.hwy_vals)\nORDER BY ha.hwy_order, lc.comp_order) AS streets_high_zm",
         "key_field": "",
         "geometry_field": "way",
         "extent_cache": "auto",
@@ -242,7 +242,7 @@
       ],
       "Datasource": {
         "type": "postgis",
-        "table": "(WITH hwy_attr(hwy_vals, hwy_class, hwy_type, hwy_order) AS (\n  VALUES (ARRAY['motorway'], 'freeway', 'street',  1),\n  (ARRAY['trunk', 'primary', 'secondary'], 'arterial', 'street', 1),\n  (ARRAY['tertiary', 'residential', 'unclassified', 'road',\n    'motorway_link', 'trunk_link', 'primary_link', 'secondary_link'],\n    'local', 'street', 1),\n  (ARRAY['service', 'living_street', 'tertiary_link'], 'service',\n    'street', 1),\n  (ARRAY['track'], 'dirt-road', 'path', 2),\n  (ARRAY['rail'], 'mainline', 'freight-rail', 3),\n  (ARRAY['crossover', 'siding', 'spur', 'yard'], 'siding', 'freight-rail', 3),\n  (ARRAY['footway', 'path', 'cycleway', 'pedestrian'], 'trail',\n    'path', 4),\n  (ARRAY['steps'], 'stairs', 'path', 5)),\n\nline_components(component, comp_order) AS (\n    VALUES ('casing', 1), ('backing', 2), ('fill', 3))\n\nSELECT way, COALESCE(highway, service, railway) AS highway, \n   COALESCE(layer, '1')::int AS layer, ha.hwy_class, ha.hwy_type, \n   lc.component, 'yes' AS bridge, 'no' AS tunnel\nFROM osmcarto._line l, line_components lc, hwy_attr ha\nWHERE (highway IS NOT NULL OR railway = 'rail')\n  AND bridge IS NOT NULL\n  AND bridge NOT IN ('no', '0')\n  AND COALESCE(highway, service, railway) = ANY(ha.hwy_vals) \nORDER BY layer, lc.comp_order, ha.hwy_order) AS bridges",
+        "table": "(WITH hwy_attr(hwy_vals, hwy_class, hwy_type, hwy_order) AS (\n  VALUES (ARRAY['motorway'], 'freeway', 'street',  1),\n  (ARRAY['trunk', 'primary', 'secondary'], 'arterial', 'street', 1),\n  (ARRAY['tertiary', 'residential', 'unclassified', 'road',\n    'motorway_link', 'trunk_link', 'primary_link', 'secondary_link'],\n    'local', 'street', 1),\n  (ARRAY['service', 'living_street', 'tertiary_link'], 'service', 'street', 1),\n  (ARRAY['rail'], 'mainline', 'freight-rail', 3),\n  (ARRAY['crossover', 'siding', 'spur', 'yard'], 'siding', 'freight-rail', 3),\n  (ARRAY['track'], 'dirt-road', 'path', 4),\n  (ARRAY['footway', 'path', 'cycleway', 'pedestrian', 'bridleway'], 'trail', 'path', 4),\n  (ARRAY['steps'], 'stairs', 'path', 4)),\n\nline_components(component, comp_order) AS (\n    VALUES ('b+t_casing', 1), ('b+t_fill', 2), ('casing', 3), ('fill', 4))\n\nSELECT way, COALESCE(highway, service, railway) AS highway, \n   COALESCE(layer, '1')::int AS layer, ha.hwy_class, ha.hwy_type, \n   lc.component, 'bridge' AS passage\nFROM osmcarto._line l, hwy_attr ha, line_components lc\nWHERE (highway IS NOT NULL OR railway = 'rail')\n  AND bridge IS NOT NULL\n  AND bridge NOT IN ('no', '0')\n  AND COALESCE(highway, service, railway) = ANY(ha.hwy_vals) \nORDER BY layer, ha.hwy_order, lc.comp_order) AS bridges",
         "key_field": "",
         "geometry_field": "way",
         "extent_cache": "auto",
@@ -271,7 +271,7 @@
       ],
       "Datasource": {
         "type": "postgis",
-        "table": "(SELECT way, highway\nFROM osmcarto._point\nWHERE highway = 'turning_circle') AS turning_circles",
+        "table": "(SELECT way, highway, 'fill' AS component\nFROM osmcarto._point\nWHERE highway = 'turning_circle') AS turning_circles",
         "key_field": "",
         "geometry_field": "",
         "extent_cache": "auto",
@@ -283,12 +283,12 @@
         "project": "tm-map-tiles",
         "srs": "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0.0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs +over"
       },
-      "id": "turning-circle",
+      "id": "turning-circle-fill",
       "class": "",
       "srs-name": "900913",
       "srs": "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0.0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs +over",
       "advanced": {},
-      "name": "turning-circle"
+      "name": "turning-circle-fill"
     },
     {
       "geometry": "polygon",
