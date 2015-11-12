@@ -27,6 +27,7 @@
 @street-casing: #adadad;//hsl(0, 0, .68);
 @trail: @street-casing;
 @path-halo: @street-light;
+@dirt-road: hsl(28, .2, .7);
 
 // trimet colors
 @max-blue: #084c8d;

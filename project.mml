@@ -129,7 +129,7 @@
       ],
       "Datasource": {
         "type": "postgis",
-        "table": "(SELECT way, highway, 'casing' AS component\nFROM osmcarto._point\nWHERE highway = 'turning_circle') AS turning_circles",
+        "table": "--st_dwithin is used here instead of touches because apparently \n--osm2pgsql shifts the geometry slightly, likely during reprojection\n(WITH street_rank(hwy_vals, rank, hwy_class) AS (\n  VALUES (ARRAY['tertiary', 'residential', 'unclassified', 'road'], 1, 'local'),\n  (ARRAY['service', 'living_street'], 2, 'service'),\n  (ARRAY['track'], 3, 'dirt-road'))\n\nSELECT pt.id, pt.way, 'casing' AS component, (\n  SELECT hwy_class FROM street_rank \n  WHERE rank = MIN(sr.rank)) AS hwy_class\nFROM osmcarto._point pt, osmcarto._line l, street_rank sr\nWHERE pt.highway = 'turning_circle'\n  AND ST_DWithin(pt.way, l.way, 0.02)\n  AND l.highway = ANY(sr.hwy_vals)\nGROUP BY pt.id, pt.way) AS turning_circles\n",
         "key_field": "",
         "geometry_field": "",
         "extent_cache": "auto",
@@ -271,7 +271,7 @@
       ],
       "Datasource": {
         "type": "postgis",
-        "table": "(SELECT way, highway, 'fill' AS component\nFROM osmcarto._point\nWHERE highway = 'turning_circle') AS turning_circles",
+        "table": "--st_dwithin is used here instead of touches because apparently \n--osm2pgsql shifts the geometry slightly, likely during reprojection\n(WITH street_rank(hwy_vals, rank, hwy_class) AS (\n  VALUES (ARRAY['tertiary', 'residential', 'unclassified', 'road'], 1, 'local'),\n  (ARRAY['service', 'living_street'], 2, 'service'),\n  (ARRAY['track'], 3, 'dirt-road'))\n\nSELECT pt.id, pt.way, 'fill' AS component, (\n  SELECT hwy_class FROM street_rank \n  WHERE rank = MIN(sr.rank)) AS hwy_class\nFROM osmcarto._point pt, osmcarto._line l, street_rank sr\nWHERE pt.highway = 'turning_circle'\n  AND ST_DWithin(pt.way, l.way, 0.02)\n  AND l.highway = ANY(sr.hwy_vals)\nGROUP BY pt.id, pt.way) AS turning_circles",
         "key_field": "",
         "geometry_field": "",
         "extent_cache": "auto",

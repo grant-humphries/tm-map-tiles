@@ -48,7 +48,7 @@ throughout this document.  Turning circles are styled here as well */
 /* *************** Width Variables z13-z18 **************** */
 
 /*-------------- Street ------------------*/
-/*--- fill ---*/
+/*----- fill -----*/
 /* -freeway-      -arterial-       -local-         -service- */
 @fwy_z13: 3.5;  @art_z13: 2;     @loc_z13: 0.7;   
 @fwy_z14: 4.5;  @art_z14: 2.5;   @loc_z14: 1;     
@@ -57,7 +57,7 @@ throughout this document.  Turning circles are styled here as well */
 @fwy_z17: 15;   @art_z17: 10.5;  @loc_z17: 6;    @srv_z17: 3;
 @fwy_z18: 20;   @art_z18: 14;    @loc_z18: 8;    @srv_z18: 4; 
 
-/*--- casing ---*/
+/*----- casing -----*/
 /* -freeway-                   -arterial-                  */
 @fwy_z13c: @fwy_z13 + 0.8;                               //13
 @fwy_z14c: @fwy_z14 + 0.8;   @art_z14c: @art_z14 + 0.8;  //14
@@ -72,8 +72,9 @@ throughout this document.  Turning circles are styled here as well */
 @loc_z17c: @loc_z17 + 1.5;   @srv_z17c: @srv_z17 + 0.8;  //17
 @loc_z18c: @loc_z18 + 2;     @srv_z18c: @srv_z18 + 1.5;  //18
 
+
 /*-------------- Freight-Rail ------------
-/*--- fill ---*/
+/*----- fill -----*/
 /* -mainline-      -siding- */
 @mln_z13: 0.4;   
 @mln_z14: 0.8;   
@@ -82,7 +83,7 @@ throughout this document.  Turning circles are styled here as well */
 @mln_z17: 1.5;   @sdg_z17: 0.8;
 @mln_z18: 2;     @sdg_z18: 1;
 
-/*--- casing ---*/
+/*----- casing -----*/
 /* -mainline-                 -siding- */
 @mln_z15c: @mln_z15 + 0.8;  
 @mln_z16c: @mln_z16 + 1;    
@@ -93,18 +94,19 @@ throughout this document.  Turning circles are styled here as well */
 
 /*--- bridge casing ---*/
 
+
 /*-------------- Paths -------------------*/
-/*--- fill ---*/
+/*----- fill -----*/
 /* -trail-         -dirt-road-      -stairs-              */
 @trl_z16: 1.5;   @drd_z16: 1.75;  @sta_z16: @trl_z16 * 2.25;
 @trl_z17: 1.75;  @drd_z17: 2.25;  @sta_z17: @trl_z17 * 2.25;
 @trl_z18: 2;     @drd_z18: 2.5;   @sta_z18: @trl_z18 * 2.25;
 
-/*--- halo ---*/
+/*----- halo -----*/
 
-/*--- bridge fill ---*/
+/*----- bridge fill -----*/
 
-/*--- bridge casing ---*/
+/*----- bridge casing -----*/
 
 /* ******************************************************** */
 
@@ -149,7 +151,7 @@ throughout this document.  Turning circles are styled here as well */
       line-color: darken(@trail, 7.5%);
       line-cap: butt;
 
-      [hwy_class='dirt-road'] { line-color: rgb(181, 162, 145); }
+      [hwy_class='dirt-road'] { line-color: @dirt-road; }
     }
   }
 
@@ -420,29 +422,66 @@ throughout this document.  Turning circles are styled here as well */
 }
 
 
-//turning circles
+// --------------- Turning Circles ---------------
 #turning-circle-fill[zoom>=15],
 #turning-circle-casing[zoom>=15] {
   marker-allow-overlap: true;
   marker-line-opacity: 0;
+  marker-width: 0;
 
   [component='fill'] { marker-fill: @street-light; }
   [component='casing'] { marker-fill: @street-casing; }
+  [hwy_class='dirt-road'] { marker-fill: @dirt-road; }
   
   [zoom=15] {
-    [component='fill'] { marker-width: @loc_z15 * 1.8; }
-    [component='casing'] { marker-width: @loc_z15 * 1.8 + 0.8; }
+    [hwy_class='local'] {
+      [component='fill'] { marker-width: @loc_z15 * 1.8; }
+      [component='casing'] { marker-width: @loc_z15 * 1.8 + @loc_z15c - @loc_z15; }
+    }
+    [hwy_class='service'] {
+      [component='fill'] { marker-width: @srv_z15 * 2; }
+    }
   }
+  
   [zoom=16] {
-    [component='fill'] { marker-width: @loc_z16 * 1.8; }
-    [component='casing'] { marker-width: @loc_z16 * 1.8 + 1.25; }
+    [hwy_class='local'] {
+      [component='fill'] { marker-width: @loc_z16 * 1.8; }
+      [component='casing'] { marker-width: @loc_z16 * 1.8 + @loc_z16c - @loc_z16; }
+    }
+    [hwy_class='service'] {
+      [component='fill'] { marker-width: @srv_z16 * 2; }
+      [component='casing'] { marker-width: @srv_z16 * 2 + @srv_z16c - @srv_z16; }
+    }
+    [hwy_class='dirt-road'] {
+      [component='fill'] { marker-width: @drd_z16 * 2.2; }
+    }
   }
+  
   [zoom=17] {
-    [component='fill'] { marker-width: @loc_z17 * 1.8; }
-    [component='casing'] { marker-width: @loc_z17 * 1.8 + 1.5; }
+    [hwy_class='local'] {
+      [component='fill'] { marker-width: @loc_z17 * 1.8; }
+      [component='casing'] { marker-width: @loc_z17 * 1.8 + @loc_z17c - @loc_z17; }
+    }
+    [hwy_class='service'] {
+      [component='fill'] { marker-width: @srv_z17 * 2; }
+      [component='casing'] { marker-width: @srv_z17 * 2 + @srv_z17c - @srv_z17; }
+    }
+    [hwy_class='dirt-road'] {
+      [component='fill'] { marker-width: @drd_z17 * 2.2; }
+    }
   }
+  
   [zoom=18] {
-    [component='fill'] { marker-width: @loc_z18 * 1.8; }
-    [component='casing'] { marker-width: @loc_z18 * 1.8 + 2; }
+    [hwy_class='local'] {
+      [component='fill'] { marker-width: @loc_z18 * 1.8; }
+      [component='casing'] { marker-width: @loc_z18 * 1.8 + @loc_z18c - @loc_z18; }
+    }
+    [hwy_class='service'] {
+      [component='fill'] { marker-width: @srv_z18 * 2; }
+      [component='casing'] { marker-width: @srv_z18 * 2 + @srv_z18c - @srv_z18; }
+    }
+    [hwy_class='dirt-road'] {
+      [component='fill'] { marker-width: @drd_z18 * 2.2; }
+    }
   }
 }
